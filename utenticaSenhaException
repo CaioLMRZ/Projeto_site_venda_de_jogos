@@ -1,0 +1,6 @@
+public class AutenticaSenhaException extends Exception {
+	
+	  public AutenticaSenhaException(String mensagem) {
+	        super(mensagem);
+	}
+}
