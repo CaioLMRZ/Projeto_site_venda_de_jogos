@@ -1,0 +1,72 @@
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
+
+import javax.sound.sampled.TargetDataLine;
+public class  User {
+	
+	protected int id;
+	protected String username;
+	protected String email;
+	protected String senha;
+	protected String dt_Nasc;
+	
+	private static Set<Integer> idsGerados = new HashSet<>();
+    private static Random random = new Random();
+
+    private void UnicoId() {
+        do {
+            this.id = random.nextInt(900000) + 100000;
+        } while (!idsGerados.add(this.id));
+   
+    }
+    
+    protected  User(String username, String email,String date, String senha) {
+    	this.username = username;
+    	this.email = email;
+    	this.senha = senha;
+    	this.dt_Nasc = date;
+    	  
+    	UnicoId();
+    	    
+    	}
+    
+    public void confirmaSenha(String confirmaSenha) throws AutenticaSenhaException {
+        if (!confirmaSenha.equals(this.senha)) {
+            System.out.println("Registro com sucesso");
+        } else {
+            throw new AutenticaSenhaException("A senha de confirmação não coincide com a senha fornecida.");
+        }
+    }
+
+    
+    
+    public int getId() {
+		return id;
+	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getSenha() {
+		return senha;
+	}
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+    public String getDt_nasc() {
+	return dt_Nasc;
+}
+    public void setDt_nasc(String Dt_nasc) {
+	this.dt_Nasc = Dt_nasc;
+}   
+   
+}
