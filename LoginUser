@@ -1,0 +1,27 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class LoginUser {
+	
+
+    public boolean Login(String username, String senha) throws SQLException {
+    	 Connection connection = ConexaoMySQL.conectaBD();
+    	    String query = "SELECT COUNT(*) FROM users WHERE username = ? AND senha = ?";
+    	    try (PreparedStatement statement = connection.prepareStatement(query)) {
+    	        statement.setString(1, username);
+    	        statement.setString(2, senha);
+    	        try (ResultSet resultSet = statement.executeQuery()) {
+    	            if (resultSet.next()) {
+    	                int count = resultSet.getInt(1);
+    	                if (count > 0) {
+    	                    System.out.println("Login com sucesso");
+    	                    return true;
+    	                }
+    	            }
+    	        }
+    	    }
+    	    return false;
+    	}
+}
