@@ -1,0 +1,68 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class Order {
+	
+	private int id;
+    private User user;
+    private Games game;
+    private CartItem cartItem;
+    private String date;
+   
+    public void salvar() throws SQLException {
+        Connection connection = ConexaoMySQL.conectaBD();
+        String query = "INSERT INTO orders (user_id, game_id, date) VALUES (?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, user.getId());
+            statement.setInt(2, game.getId());
+            statement.setString(3, date);
+            statement.executeUpdate();
+        }
+    }
+
+    
+
+    public double calculateTotalPrice() {
+        if (cartItem != null) {
+            double totalPrice = game.getPreco() * cartItem.getQuantidade();
+            return totalPrice;
+        }
+        return 0.0; 
+    }
+
+
+
+
+		public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
+	}
+	public Games getGame() {
+		return game;
+	}
+	public void setGame(Games game) {
+		this.game = game;
+	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
+	
+	    
+	    
+	    
+	    
+	    
+	    
+}
