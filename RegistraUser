@@ -1,0 +1,37 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class RegistraUser  {
+	private ConexaoMySQL conexao;
+	
+
+    public RegistraUser() {
+    	
+        conexao = new ConexaoMySQL();
+    }
+
+    public void registrarNovoUser(User user, String confirmaSenha) throws SQLException, AutenticaSenhaException {
+        if (!confirmaSenha.equals(user.getSenha())) {
+            throw new AutenticaSenhaException("A senha de confirmação não coincide com a senha fornecida.");
+        }
+    	System.out.println("Novo cliente");
+
+        Connection connection = conexao.conectaBD();
+        if (connection == null) {
+            // Tratar o caso em que a conexão não foi estabelecida corretamente
+            return;
+        }
+
+        // Lógica para inserir os dados do usuário no banco de dados
+        String query = "INSERT INTO users (username, email, dt_Nasc, senha) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, user.getUsername());
+            statement.setString(2, user.getEmail());
+            statement.setString(3, user.getDt_nasc());
+            statement.setString(4, user.getSenha());
+            statement.executeUpdate();
+        }
+    }
+    }
