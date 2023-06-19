@@ -1,0 +1,73 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+
+
+public class LogicasBancoDeDados {
+	private ConexaoMySQL conexao;
+	
+	 public LogicasBancoDeDados() {
+	        conexao = new ConexaoMySQL();
+	    }
+	
+	public void atualizarUser(User user) throws SQLException {
+        Connection connection = conexao.conectaBD();
+        if (connection == null) {
+            // Tratar o caso em que a conexão não foi estabelecida corretamente
+            return;
+        }
+
+        // Lógica para atualizar os dados do usuário no banco de dados
+        String query = "UPDATE users SET username = ?, email = ?, dt_nasc = ?, senha = ? WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, user.getUsername());
+            statement.setString(2, user.getEmail());
+            statement.setString(3, user.getDt_nasc());
+            statement.setString(4, user.getSenha());
+            statement.setInt(5, user.getId());
+            statement.executeUpdate();
+        }
+    }
+
+    public void excluirUser(int id) throws SQLException {
+        Connection connection = conexao.conectaBD();
+        if (connection == null) {
+            // Tratar o caso em que a conexão não foi estabelecida corretamente
+            return;
+        }
+
+        // Lógica para excluir o usuário do banco de dados
+        String query = "DELETE FROM users WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        }
+    }
+
+    public User consultarUser(int id) throws SQLException {
+        Connection connection = conexao.conectaBD();
+        if (connection == null) {
+            // Tratar o caso em que a conexão não foi estabelecida corretamente
+            return null;
+        }
+
+        // Lógica para consultar o usuário no banco de dados
+        String query = "SELECT * FROM users WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                String username = resultSet.getString("username");
+                String email = resultSet.getString("email");
+                String dt_nasc = resultSet.getString("dt_nasc");
+                String senha = resultSet.getString("senha");
+                User user = new User(username, email, dt_nasc, senha);
+                return user;
+            }
+        }
+        return null;
+    }
+
+}
