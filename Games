@@ -1,0 +1,67 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class Games {
+    private int id;
+    private String titulo;
+    private String descricao;
+    private double preco;
+
+    public Games(int id, String titulo, String descricao, double preco) {
+        this.id = id;
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.preco = preco;
+    }
+
+    // Métodos para persistência
+
+    public static Games getById(int id) throws SQLException {
+    	 Connection connection = ConexaoMySQL.conectaBD();
+        String query = "SELECT * FROM games WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    String titulo = resultSet.getString("title");
+                    String descricao = resultSet.getString("description");
+                    double preco = resultSet.getDouble("price");
+                    return new Games(id, titulo, descricao, preco);
+                }
+            }
+        }
+        return null;
+    }
+
+	    
+		public int getId() {
+			return id;
+		}
+		public void setId(int id) {
+			this.id = id;
+		}
+		public String getTitulo() {
+			return titulo;
+		}
+		public void setTitle(String titulo) {
+			this.titulo = titulo;
+		}
+		public String getDescricao() {
+			return descricao;
+		}
+		public void setDescricao(String descricao) {
+			this.descricao = descricao;
+		}
+		public double getPreco() {
+			return preco;
+		}
+		public void setPrice(double preco) {
+			this.preco = preco;
+		}
+	    
+	    
+	    
+	    
+}
