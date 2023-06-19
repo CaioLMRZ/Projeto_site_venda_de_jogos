@@ -1,0 +1,64 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class CartItem {
+    private int id;
+    private Games games;
+    private int quantidade;
+
+    public CartItem(int id, Games game, int quantidade) {
+        this.id = id;
+        this.games = game;
+        this.quantidade = quantidade;
+    }
+
+    
+    public void salvar() throws SQLException {
+        Connection connection = ConexaoMySQL.conectaBD();
+        String query = "INSERT INTO cart_items (game_id, quantity) VALUES (?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, games.getId());
+            statement.setInt(2, quantidade);
+            statement.executeUpdate();
+        }
+    }
+
+    public double getSubtotal() {
+        return games.getPreco() * quantidade;
+    }
+
+    public void incrementarQuantidade(int quantidadeIncremento) {
+        quantidade += quantidadeIncremento;
+    }
+
+    public void decrementarQuantidade(int quantidadeDecremento) {
+        if (quantidade >= quantidadeDecremento) {
+            quantidade -= quantidadeDecremento;
+        } else {
+            quantidade = 0;
+        }
+    }
+
+    public void atualizarQuantidade(int novaQuantidade) {
+        quantidade = novaQuantidade;
+    }
+   
+    // Getters e Setters
+    public Games  getGames() {
+        return games;
+    }
+
+    public void setGames(Games  games) {
+        this.games = games;
+    }
+
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
+}
